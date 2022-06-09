@@ -7,6 +7,11 @@ name = "pypi"
 fastapi = "*"
 uvicorn = {extras = ["standart"], version = "*"}
 pydantic = "*"
+sqlalchemy = "*"
+fastapi-sqlalchemy = "*"
+alembic = "*"
+psycopg2-binary = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

@@ -1,21 +1,18 @@
 import os
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 
-from pathlib import Path
-
-env_path = Path('..') / '.env'
-load_dotenv(dotenv_path=env_path)
+values = dotenv_values()
 
 
 class Settings:
     PROJECT_NAME: str = "Secret Santa (FastAPI)"
     PROJECT_VERSION: str = "1.0.0"
 
-    POSTGRES_USER: str = os.getenv("POSTGRES_USER")
-    POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-    POSTGRES_SERVER: str = os.getenv("POSTGRES_SERVER", "localhost")
-    POSTGRES_PORT: str = os.getenv("POSTGRES_PORT", 5432)
-    POSTGRES_DB: str = os.getenv("POSTGRES_DB", "fastapi_db")
+    POSTGRES_USER: str = values.get("POSTGRES_USER")
+    POSTGRES_PASSWORD = values.get("POSTGRES_PASSWORD")
+    POSTGRES_SERVER: str = values.get("POSTGRES_SERVER", "localhost")
+    POSTGRES_PORT: str = values.get("POSTGRES_PORT", 5432)
+    POSTGRES_DB: str = values.get("POSTGRES_DB", "fastapi_db")
     DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
 

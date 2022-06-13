@@ -1,3 +1,3 @@
 from .player import Player
 from .secret_santa import SecretSanta
-from .user import User
+from .card import Card, CardType

@@ -4,9 +4,7 @@ from fastapi import APIRouter, Query, status
 
 from schemas import Player
 
-router = APIRouter(
-    prefix='/'
-)
+router = APIRouter(prefix='/v1')
 
 
 @router.get("/players", response_model=List[str])

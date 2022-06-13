@@ -1,2 +1,2 @@
 from database.base_class import Base
-from database.models import User, Player, SecretSanta
+from database.models import Player, SecretSanta, Card

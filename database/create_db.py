@@ -1,4 +1,4 @@
-from database import Base
+from ..database import Base
 from session import engine
 
 print("Creating database . . .")

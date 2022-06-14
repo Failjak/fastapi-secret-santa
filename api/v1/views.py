@@ -2,23 +2,30 @@ from typing import List
 
 from fastapi import APIRouter, Query, status
 
-from schemas import Player
+from database.session import SessionLocal
+from database.schemas import CardSerializer, SecretSantaSerializer, PlayerSerializer
+from database.models import Card, SecretSanta, Player
 
 router = APIRouter(prefix='/v1')
 
 
-@router.get("/players", response_model=List[str])
-def get_players():
-    """Get all players"""
-    return ["Players"]
+@router.get("/game", response_model=List[SecretSantaSerializer])
+def get_game():
+    session = SessionLocal()
+    games = (
+        session
+        .query(SecretSanta)
+        .all()
+    )
+
+    return games
 
 
-@router.get("/player")
-def get_player(id: str = Query(None, min_length=1, max_length=5)):
-    return "Returned user by id"
+# @router.get("/game")
+# def get_player(id: str = Query(None, min_length=1, max_length=5)):
+#     return "Returned user by id"
 
 
-@router.post("/add_player", status_code=status.HTTP_201_CREATED)
-async def post_player(*, player: Player):
-    """Add new player to your game"""
+@router.post("/game", status_code=status.HTTP_201_CREATED)
+async def post_game(*, game: SecretSantaSerializer):
     return "Hello, world!"

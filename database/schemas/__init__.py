@@ -1,2 +1,2 @@
-from .schemas import Player, SecretSanta, Card
+from .schemas import PlayerSerializer, SecretSantaSerializer, CardSerializer
 

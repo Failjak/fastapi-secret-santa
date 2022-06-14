@@ -1,5 +1,5 @@
-from ..database import Base
-from session import engine
+from database import Base
+from database.session import engine
 
 print("Creating database . . .")
 

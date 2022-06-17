@@ -1,15 +1,15 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship, backref
+from typing import List
 
-from ..base_class import Base
+from pydantic import AnyUrl
+
+from database.models.base_model import BaseModel
+from database.models.card import Card
 
 
-class Player(Base):
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
-
-    username = Column(String)
-    social_url = Column(String, nullable=False)
-
-    cards = relationship("Card")
-    santa_id = Column(Integer, ForeignKey("secretsanta.id"))
+class Player(BaseModel):
+    id: int
+    name: str
+    username: str
+    social_url: AnyUrl
+    cards: List[Card]
+    santa_id: int

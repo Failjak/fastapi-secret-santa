@@ -1,16 +1,9 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Text
-import enum
-
-from ..base_class import Base
+from database.models.base_model import BaseModel
+from database.schemas import CardType
 
 
-class CardType(enum.Enum):
-    DESIRE = 'DESIRE'
-    ANTI_DESIRE = 'ANTI_DESIRE'
-
-
-class Card(Base):
-    id = Column(Integer, primary_key=True, index=True)
-    type = Column(Enum(CardType))
-    description = Column(Text)
-    player_id = Column(Integer, ForeignKey("player.id"))
+class Card(BaseModel):
+    id: int
+    type: CardType
+    description: str
+    player_id: int

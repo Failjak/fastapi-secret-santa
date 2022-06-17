@@ -1,15 +1,24 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
-from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
+from typing import List
 
-from ..base_class import Base
+from pydantic import BaseModel
+from datetime import datetime
+
+from database.models.base_model import BaseModel as DBBaseModel
+from database.models.player import Player
 
 
-class SecretSanta(Base):
-    id = Column(Integer, primary_key=True, index=True)
-    uuid = Column(String, unique=True, index=True)
+class SecretSantaBase(BaseModel):
+    name: str
 
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    players = relationship("Player")
+class SecretSanta(SecretSantaBase, DBBaseModel):
+    id: str
+    is_active: bool
+    code: int
+    created_at: datetime
+    updated_at: datetime
+    players: List[Player]
+
+
+class SecretSantaCreate(SecretSantaBase):
+    pass

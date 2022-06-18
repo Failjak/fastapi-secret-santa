@@ -8,8 +8,8 @@ from services.v1.secretsanta import SecretSantaService
 router = APIRouter(prefix='/secretsanta')
 
 
-@router.get("/", response_model=List[SecretSanta])
-def get_game(service: SecretSantaService = Depends()):
+@router.get("/list", response_model=List[SecretSanta])
+def get_games(service: SecretSantaService = Depends()):
     return service.get_list()
 
 

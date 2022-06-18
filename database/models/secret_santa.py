@@ -3,7 +3,7 @@ from typing import List
 from pydantic import BaseModel
 from datetime import datetime
 
-from database.models.base_model import BaseModel as ORMBaseModel
+from database.models.base_model import ORMBaseModel
 from database.models.player import Player
 
 

@@ -1,8 +1,8 @@
-from database.models.base_model import BaseModel
+from database.models.base_model import ORMBaseModel
 from database.schemas import CardType
 
 
-class Card(BaseModel):
+class Card(ORMBaseModel):
     id: int
     type: CardType
     description: str

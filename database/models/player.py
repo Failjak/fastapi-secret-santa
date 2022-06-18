@@ -1,15 +1,22 @@
 from typing import List
 
-from pydantic import AnyUrl
+from pydantic import AnyUrl, BaseModel
 
-from database.models.base_model import BaseModel
+from database.models.base_model import ORMBaseModel
 from database.models.card import Card
 
 
-class Player(BaseModel):
-    id: int
+class BasePlayer(BaseModel):
     name: str
-    username: str
+    username: str = None
     social_url: AnyUrl
-    cards: List[Card]
     santa_id: int
+
+
+class Player(BasePlayer, ORMBaseModel):
+    id: int
+    cards: List[Card] = []
+
+
+class PlayerCreate(BasePlayer):
+    pass

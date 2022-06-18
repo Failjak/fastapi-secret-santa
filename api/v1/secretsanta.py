@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, Depends
 
 from database.models import SecretSanta, SecretSantaCreate
 from services.v1.secretsanta import SecretSantaService

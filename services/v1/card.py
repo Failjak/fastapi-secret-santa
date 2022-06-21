@@ -9,6 +9,8 @@ from database.models import Card, CardCreate
 
 
 class CardService:
+    """ Card Service """
+
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 

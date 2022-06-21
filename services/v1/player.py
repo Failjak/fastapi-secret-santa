@@ -2,12 +2,13 @@ from typing import List
 
 from fastapi import Depends
 
-from database.session import Session, get_session
 from database import schemas
 from database.models import Player, PlayerCreate
+from database.session import Session, get_session
 
 
 class PlayerService:
+    """ Player Service """
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 

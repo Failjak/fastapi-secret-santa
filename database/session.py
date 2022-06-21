@@ -11,6 +11,7 @@ Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def get_session() -> Session:
+    """ Generator for getting a session """
     session = Session()
     try:
         yield session

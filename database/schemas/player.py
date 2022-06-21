@@ -5,6 +5,8 @@ from database.base_class import Base
 
 
 class Player(Base):
+    """ Player DB schema """
+
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String)
 

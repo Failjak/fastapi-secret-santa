@@ -1,17 +1,19 @@
+from datetime import datetime
 from typing import List
 
 from pydantic import BaseModel
-from datetime import datetime
 
 from database.models.base_model import ORMBaseModel
 from database.models.player import Player
 
 
 class SecretSantaBase(BaseModel):
+    """ SecreteSanta base model """
     name: str
 
 
 class SecretSanta(SecretSantaBase, ORMBaseModel):
+    """ SecretSanta model with full information """
     id: int
     is_active: bool
     code: int
@@ -21,4 +23,5 @@ class SecretSanta(SecretSantaBase, ORMBaseModel):
 
 
 class SecretSantaCreate(SecretSantaBase):
+    """ SecretSanta mode with information to create """
     pass

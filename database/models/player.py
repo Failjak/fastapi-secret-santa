@@ -7,6 +7,7 @@ from database.models.card import Card
 
 
 class BasePlayer(BaseModel):
+    """ Player base model """
     name: str
     username: str = None
     social_url: AnyUrl
@@ -14,9 +15,11 @@ class BasePlayer(BaseModel):
 
 
 class Player(BasePlayer, ORMBaseModel):
+    """ Player model with full information"""
     id: int
     cards: List[Card] = []
 
 
 class PlayerCreate(BasePlayer):
+    """ Player model with information to create """
     pass

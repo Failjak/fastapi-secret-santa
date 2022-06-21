@@ -1,13 +1,15 @@
 import random
 from typing import List
+
 from fastapi import Depends
 
-from database.session import Session, get_session
-from database.models import SecretSanta, SecretSantaCreate
 from database import schemas
+from database.models import SecretSanta, SecretSantaCreate
+from database.session import Session, get_session
 
 
 class SecretSantaService:
+    """ SecretSanta Service """
     MIN_SANTA_CODE_NUMBER = 100000
     MAX_SANTA_CODE_NUMBER = 999999
 
@@ -15,6 +17,7 @@ class SecretSantaService:
         self.session = session
 
     def get_list(self) -> List[SecretSanta]:
+        """ Getting a list of SecretSanta games """
         games = (
             self.session
             .query(schemas.SecretSanta)
@@ -35,4 +38,3 @@ class SecretSantaService:
 
     def _generate_game_code(self):
         return random.randrange(self.MIN_SANTA_CODE_NUMBER, self.MAX_SANTA_CODE_NUMBER)
-

@@ -12,6 +12,7 @@ fastapi-sqlalchemy = "*"
 alembic = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
+pylint = "*"
 
 [dev-packages]
 

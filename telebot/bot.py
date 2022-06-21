@@ -1,9 +1,11 @@
-import os
-
 from aiogram import Bot, Dispatcher, executor, types
+from dotenv import dotenv_values
 
-bot = Bot(token=os.getenv('TELEGRAM_BOT_KEY'))
+config = dotenv_values()
+
+bot = Bot(token=config.get('TELEGRAM_BOT_KEY'))
 dp = Dispatcher(bot)
+
 
 @dp.message_handler()
 async def cmd_start(message: types.Message):

@@ -1,17 +1,13 @@
-import logging
+import os
+
 from aiogram import Bot, Dispatcher, executor, types
 
-# from core.config import settings
-
-bot = Bot(token='5574037701:AAHVn2itsfgI8U7IfJ1woGWdg0wEy2SnWxc')
+bot = Bot(token=os.getenv('TELEGRAM_BOT_KEY'))
 dp = Dispatcher(bot)
-
-
-logging.basicConfig(level=logging.INFO)
-
 
 @dp.message_handler()
 async def cmd_start(message: types.Message):
+    print(message)
     await message.reply("You've registered. Then you will receive updates on your game. ")
 
 

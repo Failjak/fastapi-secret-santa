@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
-from database.models.base_model import ORMBaseModel
-from database.schemas import CardType
+from .base_model import ORMBaseModel
+from ..schemas import CardType
 
 
 class BaseCard(BaseModel):

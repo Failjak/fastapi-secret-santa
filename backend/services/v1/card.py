@@ -1,11 +1,9 @@
 from typing import List
 
-from fastapi import Depends
-
-
-from database.session import Session, get_session
 from database import schemas
 from database.models import Card, CardCreate
+from database.session import Session, get_session
+from fastapi import Depends
 
 
 class CardService:

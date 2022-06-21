@@ -1,6 +1,6 @@
 FROM python:3.9
 
-WORKDIR /usr/src/backend
+WORKDIR /usr/src/backend/
 
 COPY Pipfile ./
 COPY Pipfile.lock ./

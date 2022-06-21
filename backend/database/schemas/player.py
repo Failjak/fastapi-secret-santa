@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
-from database.base_class import Base
+from ..base_class import Base
 
 
 class Player(Base):

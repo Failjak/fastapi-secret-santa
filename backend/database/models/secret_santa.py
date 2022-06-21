@@ -3,8 +3,8 @@ from typing import List
 
 from pydantic import BaseModel
 
-from database.models.base_model import ORMBaseModel
-from database.models.player import Player
+from .base_model import ORMBaseModel
+from .player import Player
 
 
 class SecretSantaBase(BaseModel):

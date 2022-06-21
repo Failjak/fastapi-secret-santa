@@ -18,5 +18,7 @@ class Settings:
                    f"{POSTGRES_USER}:{POSTGRES_PASSWORD}@" \
                    f"{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
+    TELEGRAM_BOT_KEY: str = values.get("TELEGRAM_BOT_KEY")
+
 
 settings = Settings()

@@ -3,16 +3,30 @@ version: "3.8"
 services:
   db:
     image: postgres:14.1-alpine
-#    volumes:
-#      - ./postgres_data:/var/lib/postgresql/data/
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data/
     env_file:
       - .env
     ports:
       - "5445:5432"
     restart: always
 
+  redis:
+    image: redis
+    container_name: ss-redis
+    restart: always
+    ports:
+      - "6378:6378"
+
+  telebot:
+    build: ./telebot
+    ports:
+      - "8009:8009"
+    depends_on:
+      - redis
+
   backend:
-    build: .
+    build: ./backend
     ports:
       - "8008:8008"
     command: uvicorn main:app --host 0.0.0.0 --port 8008 --reload

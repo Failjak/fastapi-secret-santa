@@ -2,8 +2,7 @@ import enum
 
 from sqlalchemy import Column, Integer, ForeignKey, Enum, Text
 
-from ..base_class import Base
-
+from .base_class import Base
 
 class CardType(enum.Enum):
     """ Enum with card types """

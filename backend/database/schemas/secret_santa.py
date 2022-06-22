@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
-from ..base_class import Base
+from .base_class import Base
 
 
 class SecretSanta(Base):
@@ -11,6 +11,7 @@ class SecretSanta(Base):
     id = Column(
         Integer,
         primary_key=True,
+        unique=True,
         index=True,
         autoincrement=True
     )

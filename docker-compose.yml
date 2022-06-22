@@ -3,10 +3,11 @@ version: "3.8"
 services:
   db:
     image: postgres:14.1-alpine
+    container_name: ss-postgres
     volumes:
       - ./postgres_data:/var/lib/postgresql/data/
     env_file:
-      - telebot/.env
+      - backend/.env
     ports:
       - "5445:5432"
     restart: always
@@ -20,16 +21,23 @@ services:
 
   telebot:
     build: ./telebot
+    container_name: ss-telebot
     ports:
       - "8009:8009"
+    restart: on-failure
     depends_on:
       - redis
 
   backend:
     build: ./backend
+    container_name: ss-backend
+    volumes:
+      - .:/src/app/
     ports:
       - "8008:8008"
-    command: uvicorn main:app --host 0.0.0.0 --port 8008 --reload
+    env_file:
+      - backend/.env
+    restart: on-failure
     depends_on:
       - db
 

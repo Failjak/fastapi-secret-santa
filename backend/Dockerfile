@@ -10,4 +10,6 @@ RUN pipenv install --system --deploy
 
 COPY . .
 
+ENTRYPOINT ["/bin/sh", "entrypoint.sh"]
+
 #CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

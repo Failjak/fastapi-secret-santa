@@ -23,14 +23,22 @@ class SecretSantaService:
             .query(schemas.SecretSanta)
             .all()
         )
-
         return games
+
+    def get_by_code(self, game_code: int) -> SecretSanta:
+        """ Getting the SecretSanta model by code game """
+        game = (
+            self.session
+            .query(schemas.SecretSanta)
+            .get(code=game_code)
+        )
+        return game
 
     def create(self, santa_data: SecretSantaCreate) -> schemas.SecretSanta:
         """ Creating the SecretSanta game """
         santa_dict = santa_data.dict()
         santa_dict['code'] = self._generate_game_code()
-
+        # TODO add try construct to handle non-unique code value
         santa = schemas.SecretSanta(**santa_dict)
         self.session.add(santa)
         self.session.commit()

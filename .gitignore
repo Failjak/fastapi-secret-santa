@@ -103,6 +103,7 @@ celerybeat.pid
 
 # Environments
 telebot/.env
+backend/.env
 .venv
 env/
 venv/

@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+.idea
+
 # C extensions
 *.so
 
@@ -60,6 +62,7 @@ coverage.xml
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+postgres_data
 
 # Flask stuff:
 instance/
@@ -128,3 +131,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+txt.txt

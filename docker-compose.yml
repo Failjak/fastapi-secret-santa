@@ -13,11 +13,40 @@ services:
     restart: always
 
   redis:
-    image: redis
+    image: redis:7.0.2-alpine
     container_name: ss-redis
-    restart: always
+    restart: on-failure
+    command: --port 6378
     ports:
       - "6378:6378"
+    expose:
+      - "6378"
+
+  mongodb:
+    image: mongo
+    container_name: ss-mongodb
+    volumes:
+      - ./mongodb_data:/var/lib/mongodb/data
+    env_file:
+      - telebot/.env
+    ports:
+      - "27017:27017"
+    expose:
+      - "27017"
+    command: mongod
+    restart: on-failure
+
+  celery:
+    build: ./telebot
+    container_name: ss-celery
+    command: celery -A tasks worker --loglevel=INFO
+    volumes:
+      - ./celery_data:/var/lib/celery/data
+    env_file:
+      - telebot/.env
+    restart: on-failure
+    depends_on:
+      - redis
 
   telebot:
     build: ./telebot
@@ -27,6 +56,8 @@ services:
     restart: on-failure
     depends_on:
       - redis
+      - mongodb
+      - celery
 
   backend:
     build: ./backend
@@ -42,5 +73,7 @@ services:
       - db
 
 volumes:
+  mongodb_data:
+  postgres_data:
   db:
     driver: local

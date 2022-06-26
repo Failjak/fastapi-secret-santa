@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 aiogram = "*"
 python-dotenv = "*"
+pymongo = "*"
+ipython = "*"
+celery = {extras = ["redis"], version = "*"}
 
 [dev-packages]
 

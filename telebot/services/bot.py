@@ -8,7 +8,6 @@ class BotService:
 
     @classmethod
     def handle_message(cls, message: dict):
-        client = cls.DB()
         result = {
             '_id': message.get('id'),
             'username': message.get('username'),
@@ -16,9 +15,15 @@ class BotService:
             'last_name': message.get('last_name'),
             'tmp': random.randint(1, 99)
         }
-        return client.insert(result)
+        return cls.save_data(result)
 
     @classmethod
     def all_info(cls):
         client = cls.DB()
         return client.select(elements={}, multiple=True)
+
+    @classmethod
+    def save_data(cls, data: dict):
+        client = cls.DB()
+        return client.insert(data)
+

@@ -15,6 +15,7 @@ python-dotenv = "*"
 pylint = "*"
 redis = "*"
 aiogram = "*"
+kafka-python = "*"
 
 [dev-packages]
 

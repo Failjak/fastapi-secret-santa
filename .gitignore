@@ -65,6 +65,7 @@ db.sqlite3-journal
 postgres_data
 mongodb_data
 celery_data
+kafka/
 
 # Flask stuff:
 instance/

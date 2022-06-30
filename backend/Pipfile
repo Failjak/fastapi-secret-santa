@@ -14,8 +14,7 @@ psycopg2-binary = "*"
 python-dotenv = "*"
 pylint = "*"
 redis = "*"
-aiogram = "*"
-kafka-python = "*"
+pika = "*"
 
 [dev-packages]
 

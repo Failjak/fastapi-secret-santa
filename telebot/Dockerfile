@@ -1,6 +1,6 @@
 FROM python:3.9
 
-WORKDIR /usr/src/telebot
+WORKDIR /usr/src/telebot/
 
 COPY Pipfile ./
 COPY Pipfile.lock ./
@@ -10,6 +10,6 @@ RUN pipenv install --system --deploy
 
 COPY . .
 
-CMD ["python3", "./bot.py"]
+CMD ["python3", "bot.py"]
 
 

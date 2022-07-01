@@ -4,8 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-aiogram = "*"
 python-dotenv = "*"
+aiogram = "*"
 pymongo = "*"
 ipython = "*"
 celery = {extras = ["redis"], version = "*"}

@@ -2,8 +2,8 @@ from typing import List
 
 from pydantic import AnyUrl, BaseModel
 
-from .base_model import ORMBaseModel
-from .card import Card
+from database.models.base_model import ORMBaseModel
+from database.models.card import Card
 
 
 class BasePlayer(BaseModel):

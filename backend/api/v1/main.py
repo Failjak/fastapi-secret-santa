@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
-from .secretsanta import router as secretsanta_router
-from .player import router as player_router
-from .card import router as card_router
+from api.v1.secretsanta import router as secretsanta_router
+from api.v1.player import router as player_router
+from api.v1.card import router as card_router
 
 router = APIRouter(prefix='/v1')
 

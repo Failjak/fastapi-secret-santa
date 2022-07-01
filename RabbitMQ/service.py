@@ -1,37 +1,70 @@
+from typing import Union
+
 import pika
 from pika import PlainCredentials
+import json
 
-from RabbitMQ.config import config
+from RabbitMQ.config import Config
 
 
 class RabbitService:
-    QUEUE_NAME = config.RABBITMQ_QUEUE_NAME
+    """ Communication with RabbitMQ service """
 
-    def __init__(self):
-        self.connection = self._get_connection()
-        self.channel = self.connection.channel()
-        self.channel.queue_declare(RabbitService.QUEUE_NAME)
+    def __init__(self, config: Config):
+        self.config = config
+        self.queue_name = self.config.QUEUE_NAME
 
-    def add_message(self, message, exchange='', routing_key=QUEUE_NAME):
-        self.channel.basic_publish(
+        self._connection = self._get_connection()
+        self._channel = self._connection.channel()
+        self._channel.queue_declare(self.queue_name)
+
+    def add_message(self, message, exchange=''):
+        """ Adding message to queue in RabbitMQ """
+
+        self._channel.basic_publish(
             exchange=exchange,
-            routing_key=routing_key,
-            body=str(message).encode()
+            routing_key=self.queue_name,
+            body=json.dumps(message).encode()
         )
 
-    def get_message(self) -> str:
-        message = self.channel.basic_get(
-            queue=RabbitService.QUEUE_NAME
-        )[-1]
+    def get_message(self):
+        """ Getting message from RabbitMQ queue """
+
+        resp = self._channel.basic_get(
+            queue=self.queue_name
+        )
+        message = self.callback(*resp)
         return message
 
     @staticmethod
-    def _get_connection():
+    def callback(method, properties, body: Union[bytes, None]):
+        """ Getting decoded body """
+        return json.loads(body)
+
+    def _get_connection(self):
+        """ Getting connection to RabbitMQ """
+
         return pika.BlockingConnection(pika.ConnectionParameters(
-            host=config.RABBITMQ_HOST,
-            port=config.RABBITMQ_PORT,
+            host=self.config.HOST,
+            port=self.config.PORT,
             credentials=PlainCredentials(
-                username=config.RABBITMQ_USERNAME,
-                password=config.RABBITMQ_PASSWORD
+                username=self.config.USERNAME,
+                password=self.config.PASSWORD
             )
         ))
+    
+    @property
+    def is_connected(self) -> bool:
+        """ Returns a boolean reporting the current connection state """
+        return self._connection.is_open
+
+    def close_connection(self):
+        """ Closing connection with RabbitMQ """
+        self._connection.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._connection.close()
+        return True

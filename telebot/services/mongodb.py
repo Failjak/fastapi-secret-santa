@@ -5,7 +5,7 @@ from dotenv import dotenv_values
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 
-from .db import DBService
+from services.db import DBService
 
 config = dotenv_values()
 

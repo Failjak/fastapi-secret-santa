@@ -1,6 +1,6 @@
 import random
 
-from .mongodb import MongoService as DBService
+from services.mongodb import MongoService as DBService
 
 
 class BotService:

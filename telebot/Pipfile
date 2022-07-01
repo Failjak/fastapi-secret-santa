@@ -9,6 +9,7 @@ aiogram = "*"
 pymongo = "*"
 ipython = "*"
 celery = {extras = ["redis"], version = "*"}
+pika = "*"
 
 [dev-packages]
 

@@ -2,7 +2,7 @@ from abc import ABC
 from typing import List, Union
 
 
-class DBService(ABC):
+class DataBaseService(ABC):
     def __repr__(self):
         return f'<{self.__class__.__name__}>'
 

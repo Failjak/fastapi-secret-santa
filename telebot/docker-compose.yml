@@ -12,19 +12,19 @@ services:
     restart: always
     ports:
       # AMQP protocol port
-      - "5672:5672"
+      - "5673:5673"
       # HTTP management UI
-      - "15672:15672"
+      - "15673:15672"
 
   redis:
     image: redis:7.0.2-alpine
     container_name: t-redis
     restart: on-failure
-    command: --port 6378
+    command: --port 6377
     ports:
-      - "6378:6378"
+      - "6377:6377"
     expose:
-      - "6378"
+      - "6377"
 
   mongodb:
     image: mongo
@@ -43,15 +43,31 @@ services:
   celery:
     build: ./
     container_name: t-celery
-    command: celery -A telebot worker --loglevel=info
+    command: celery worker --loglevel=info
     volumes:
-      - ./celery_data:/var/lib/celery/data
+      - ./celery_data/worker/:/var/lib/celery/worked
+#    env_file:
+#      - .env
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6377/0
+      - CELERY_RESULT_BACKEND=redis://redis:6377/0
+    restart: on-failure
+    depends_on:
+      - redis
+      - telebot
+
+  celery-beat:
+    build: ./
+    container_name: t-celery-beat
+    command: celery beat --loglevel=info
+    volumes:
+      - ./celery_data/beat/:/var/lib/celery/beat
     env_file:
       - .env
 #    environment:
-#      - CELERY_BROKER_URL=redis://redis:6379/0
-#      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-    restart: on-failure
+#      - DEBUG=1
+#      - SECRET_KEY=dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m
+#      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
     depends_on:
       - redis
       - telebot
@@ -59,6 +75,7 @@ services:
   telebot:
     build: ./
     container_name: t-telebot
+    command: python3 main.py
     ports:
       - "8009:8009"
     restart: on-failure
@@ -66,6 +83,19 @@ services:
       - redis
       - mongodb
       - rabbitmq
+
+  flower:
+    build: ./
+    image: mher/flower
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6377/0
+      - FLOWER_PORT=8888
+#    env_file:
+#      - .env
+    ports:
+      - "8888:8888"
+    depends_on:
+      - redis
 
 volumes:
   celery_data:

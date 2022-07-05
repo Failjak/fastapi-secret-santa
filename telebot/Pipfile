@@ -10,6 +10,8 @@ pymongo = "*"
 ipython = "*"
 celery = {extras = ["redis"], version = "*"}
 pika = "*"
+flower = "*"
+pydantic = "*"
 
 [dev-packages]
 

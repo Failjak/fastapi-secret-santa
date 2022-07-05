@@ -5,7 +5,7 @@ from dotenv import dotenv_values
 from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 
-from services.db import DBService
+from services.db import DataBaseService
 
 config = dotenv_values()
 
@@ -15,7 +15,7 @@ class Config:
         self.config = dotenv_values()
 
 
-class MongoService(DBService, Config):
+class MongoService(DataBaseService, Config):
 
     USER_COLLECTION_NAME = 'user'
 

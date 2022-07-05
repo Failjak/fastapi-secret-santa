@@ -1,13 +1,15 @@
 import random
 
-from services.mongodb import MongoService as DBService
+from pydantic import BaseSettings
+
+from services.db import DataBaseService
 
 
 class BotService:
-    DB = DBService
+    def __init__(self, db: DataBaseService, settings: BaseSettings):
+        self._db = db
 
-    @classmethod
-    def handle_message(cls, message: dict):
+    def handle_message(self, message: dict):
         result = {
             '_id': message.get('id'),
             'username': message.get('username'),
@@ -15,15 +17,11 @@ class BotService:
             'last_name': message.get('last_name'),
             'tmp': random.randint(1, 99)
         }
-        return cls.save_data(result)
+        return self._save_data(result)
 
-    @classmethod
-    def all_info(cls):
-        client = cls.DB()
-        return client.select(elements={}, multiple=True)
+    def all_info(self):
+        return self._db.select(elements={}, multiple=True)
 
-    @classmethod
-    def save_data(cls, data: dict):
-        client = cls.DB()
-        return client.insert(data)
+    def _save_data(self, data: dict):
+        return self._db.insert(data)
 

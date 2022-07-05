@@ -10,6 +10,6 @@ RUN pipenv install --system --deploy
 
 COPY . .
 
-CMD ["python3", "bot.py"]
+#CMD ["python3", "main.py"]
 
 

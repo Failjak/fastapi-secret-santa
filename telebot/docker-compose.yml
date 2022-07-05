@@ -1,0 +1,75 @@
+version: "3.8"
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: t-rabbitmq
+    volumes:
+      - ./rabbitmq_data:/var/lib/rabbitmq/data
+    env_file:
+      - .env
+    restart: always
+    ports:
+      # AMQP protocol port
+      - "5672:5672"
+      # HTTP management UI
+      - "15672:15672"
+
+  redis:
+    image: redis:7.0.2-alpine
+    container_name: t-redis
+    restart: on-failure
+    command: --port 6378
+    ports:
+      - "6378:6378"
+    expose:
+      - "6378"
+
+  mongodb:
+    image: mongo
+    container_name: t-mongodb
+    volumes:
+      - ./mongodb_data:/var/lib/mongodb/data
+    env_file:
+      - .env
+    ports:
+      - "27017:27017"
+    expose:
+      - "27017"
+    command: mongod
+    restart: on-failure
+
+  celery:
+    build: ./
+    container_name: t-celery
+    command: celery -A telebot worker --loglevel=info
+    volumes:
+      - ./celery_data:/var/lib/celery/data
+    env_file:
+      - .env
+#    environment:
+#      - CELERY_BROKER_URL=redis://redis:6379/0
+#      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    restart: on-failure
+    depends_on:
+      - redis
+      - telebot
+
+  telebot:
+    build: ./
+    container_name: t-telebot
+    ports:
+      - "8009:8009"
+    restart: on-failure
+    depends_on:
+      - redis
+      - mongodb
+      - rabbitmq
+
+volumes:
+  celery_data:
+  rabbitmq_data:
+  mongodb_data:
+  db:
+    driver: local

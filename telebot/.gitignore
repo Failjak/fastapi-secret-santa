@@ -1,0 +1,4 @@
+celery_data
+mongodb_data
+.env
+Pipfile.lock

@@ -6,7 +6,9 @@ from services.bot import BotService
 
 config = dotenv_values()
 
-app = Celery('telebot', broker=config.get('CELERY_BROKER_URL'), backend=config.get('CELERY_RESULT_BACKEND'))
+app = Celery('telebot')
+app.conf.broker_url = config.get('CELERY_BROKER_URL', 'redis://0.0.0.0:6378')
+app.conf.result_backend = config.get('CELERY_RESULT_BACKEND', 'redis://0.0.0.0:6378')
 
 
 @app.task

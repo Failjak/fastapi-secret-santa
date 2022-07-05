@@ -14,11 +14,11 @@ class SecretSantaBase(BaseModel):
     expected_amount: Optional[float] = None
     currency_iso3: Optional[CurrencyType]
 
-    @validator('currency_iso3', pre=True)
-    def validate_enum_field(cls, field: str):
-        if hasattr(CurrencyType, str(field)):
-            return CurrencyType(field)
-        return None
+    # @validator('currency_iso3', pre=True)
+    # def validate_enum_field(cls, field: str):
+    #     if hasattr(CurrencyType, str(field)):
+    #         return CurrencyType(field)
+    #     return None
 
 
 class SecretSanta(SecretSantaBase, ORMBaseModel):

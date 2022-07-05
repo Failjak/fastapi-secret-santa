@@ -1,0 +1,70 @@
+version: "3.8"
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: ssb-rabbitmq
+    env_file:
+      - .env
+    restart: always
+    ports:
+      # AMQP protocol port
+      - "5672:5672"
+      # HTTP management UI
+      - "15672:15672"
+
+  db:
+    image: postgres:14.1-alpine
+    container_name: ssb-postgres
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    ports:
+      - "5445:5432"
+    restart: always
+
+  redis:
+    image: redis:7.0.2-alpine
+    container_name: ssb-redis
+#    restart: on-failure
+    command: --port 6378
+    ports:
+      - "6378:6378"
+    expose:
+      - "6378"
+
+  backend:
+    build: ./
+    container_name: ssb-backend
+    volumes:
+      - .:/src/app/
+    ports:
+      - "8008:8008"
+    env_file:
+      - .env
+    restart: on-failure
+    depends_on:
+      - redis
+      - db
+      - rabbitmq
+
+  celery:
+    build: ./
+    container_name: ssb-celery
+    command: celery worker -A backend --loglevel=info
+    volumes:
+      - ./celery_data:/var/lib/celery/data
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6378/0
+      - CELERY_RESULT_BACKEND=redis://redis:6378/0
+    depends_on:
+      - redis
+      - backend
+
+volumes:
+  celery_data:
+  postgres_data:
+  db:
+    driver: local

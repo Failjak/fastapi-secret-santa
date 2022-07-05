@@ -19,7 +19,7 @@ class CardService:
         self.session.commit()
         return card
 
-    def get_list(self, player_id: int) -> List[Card]:
+    def get_list(self, player_id: int) -> List[schemas.Card]:
         """ Getting card for this player_id """
         cards = self.session.query(schemas.Card).filter_by(player_id=player_id).all()
         return cards

@@ -15,6 +15,7 @@ python-dotenv = "*"
 pylint = "*"
 redis = "*"
 pika = "*"
+celery = {extras = ["redis"], version = "*"}
 
 [dev-packages]
 

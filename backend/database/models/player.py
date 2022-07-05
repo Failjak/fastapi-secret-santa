@@ -11,7 +11,6 @@ class BasePlayer(BaseModel):
     name: str
     username: str = None
     social_url: AnyUrl
-    santa_code: int = None
 
 
 class Player(BasePlayer, ORMBaseModel):
@@ -19,8 +18,14 @@ class Player(BasePlayer, ORMBaseModel):
     id: int
     cards: List[Card] = []
     gives_to_id: int = None
+    santa_code: int = None
 
 
 class PlayerCreate(BasePlayer):
     """ Player model with information to create """
-    pass
+    santa_code: int = None
+
+
+class PlayerMessage(BasePlayer):
+    """ PlayerMessage model """
+    gives_to: BasePlayer

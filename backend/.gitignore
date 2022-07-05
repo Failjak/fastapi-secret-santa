@@ -1,2 +1,5 @@
 .env
 *.txt
+
+celery_data
+postgres_data

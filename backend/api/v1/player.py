@@ -15,6 +15,6 @@ def create_player(player_data: PlayerCreate, service: PlayerService = Depends())
 
 
 @router.get('/', response_model=List[Player])
-def get_players(santa_id: int = None, service: PlayerService = Depends()):
-    """ Getting players """
-    return service.get_list(santa_id)
+def get_players(santa_code: int, service: PlayerService = Depends()):
+    """ Getting players by santa_code """
+    return service.get_list(santa_code)

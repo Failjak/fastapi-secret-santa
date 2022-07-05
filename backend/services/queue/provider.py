@@ -8,7 +8,7 @@ from services.queue.config import Config
 
 
 class QueueProviderService:
-    """ Communication with  """
+    """ Communication with RabbitMQ service """
 
     def __init__(self, config: Config):
         self.config = config

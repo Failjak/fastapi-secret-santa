@@ -11,7 +11,13 @@ router = APIRouter(prefix='/player')
 @router.post('/', response_model=Player)
 def create_player(player_data: PlayerCreate, service: PlayerService = Depends()):
     """ Creating players """
-    return service.create(player_data)
+    return service.create([player_data, ])
+
+
+@router.post('/players', response_model=List[Player])
+def create_player(players_data: List[PlayerCreate], service: PlayerService = Depends()):
+    """ Creating players """
+    return service.create(players_data)
 
 
 @router.get('/', response_model=List[Player])

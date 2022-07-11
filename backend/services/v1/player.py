@@ -1,7 +1,7 @@
 import random
 from typing import List
 
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import load_only
 
 from database import schemas
@@ -14,12 +14,15 @@ class PlayerService:
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def create(self, player_data: PlayerCreate) -> schemas.Player:
-        """ Creating the PLayer """
-        player = schemas.Player(**player_data.dict())
-        self.session.add(player)
+    def create(self, players_data: List[PlayerCreate]) -> List[schemas.Player]:
+        """ Creating the Player """
+        players = []
+        for player_data in players_data:
+            player = schemas.Player(**player_data.dict())
+            players.append(player)
+            self.session.add(player)
         self.session.commit()
-        return player
+        return players
 
     def get_list(self, santa_code: int, fields: list = None) -> List[schemas.Player]:
         """ Getting all players by santa_id """
@@ -38,23 +41,21 @@ class PlayerService:
         """ Distribution of gifts """
 
         players = self.get_list(santa_code, fields=['id', 'gives_to_id'])
+        if len(players) <= 2:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Count of users need be more than 2")
+
         players_ids = [player.id for player in players]
+        used_ids = []
 
         for player in players:
+            gives_from_id = [pl.id for pl in player.gives_from]
+            ids_to_skip = [player.id, player.gives_to_id] + gives_from_id + used_ids
+            available_ids = [id for id in players_ids if id not in ids_to_skip]
 
-            # TODO skip id if this player gives gift to the current player
-            # id_to_skip = player.gives_from[0].id
-            # current_ids = players_ids[:]
-            # if id_to_skip in current_ids:
-            #     current_ids.remove(player.gives_from[0].id)
+            random_id = random.choice(available_ids)
+            used_ids.append(random_id)
 
-            # id_to_gives = random.choice(players_ids)
-            # while id_to_gives == player.id:
-            #     id_to_gives = random.choice(players_ids)
-            #
-            # players_ids.remove(id_to_gives)
-            #
-            # player.gives_to_id = id_to_gives
+            player.gives_to_id = random_id
             self.session.add(player)
 
         self.session.commit()

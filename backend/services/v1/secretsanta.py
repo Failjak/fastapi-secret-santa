@@ -3,7 +3,7 @@ from typing import List
 from fastapi import Depends
 
 from database import schemas
-from database.models import SecretSanta, SecretSantaCreate
+from database.models import SecretSantaCreate
 from database.session import Session, get_session
 from services.helpers.helper import generate_random_number
 

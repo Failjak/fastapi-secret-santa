@@ -16,6 +16,15 @@ class CurrencyType(str, enum.Enum):
     RUB = 'RUB'
 
 
+class StatusType(str, enum.Enum):
+    """ Status types """
+    CREATED = "CREATED"
+    READY = "READY"
+    PLAYERS = "PLAYERS"
+    SUBMITTED = "SUBMITTED"
+    FAILED = "FAILED"
+
+
 class SecretSanta(Base):
     """ SecretSanta DB schema """
 
@@ -27,6 +36,8 @@ class SecretSanta(Base):
         autoincrement=True
     )
     is_active = Column(Boolean, default=True)
+    status = Column(Enum(StatusType))
+
     name = Column(String(255))
     code = Column(Integer, unique=True, primary_key=True)
 

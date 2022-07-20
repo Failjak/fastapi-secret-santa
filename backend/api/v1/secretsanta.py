@@ -1,10 +1,10 @@
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from database.models import SecretSanta, SecretSantaCreate
-from services.helpers.helper import get_dict_from_model
-from services.mappers.player import player_model_mapper, forming_players_message
+from database.schemas import StatusType
+from services.mappers.player import forming_players_message
 from services.tasks import send_message_to_queue_task
 from services.v1.secretsanta import SecretSantaService
 from services.v1.player import PlayerService
@@ -35,8 +35,34 @@ def submit_game(
         santa_code: int,
         ss_service: SecretSantaService = Depends(),
         player_service: PlayerService = Depends()):
-    """ Submitting the game """
-    players = player_service.distribution(santa_code)
-    message = forming_players_message(santa_code, players)
-    send_message_to_queue_task(message)
+    """
+    Submitting the game
+
+    Handling statuses:
+        READY - allow to submit
+        PLAYERS - need to reset gift distribution
+        CREATE - raise exception
+        SUBMITTED - skipping
+    """
+
+    santa = ss_service.get_by_code(santa_code)
+    # TODO if ready - allow to submit
+    # TODO if players -  need to reset
+    # TODO if create - just distribution
+    # TODO if submitted - skip
+
+    if santa.status == StatusType.CREATED:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Need to add players")
+
+    if santa.status == StatusType.PLAYERS:
+        player_service.reset_distribution(santa_code)
+        ss_service.update_status(santa_code, StatusType.READY)
+
+    if santa.status == StatusType.READY:
+        players = player_service.distribution(santa_code)
+        ss_service.update_status(santa_code, StatusType.SUBMITTED)
+
+        message = forming_players_message(santa_code, players)
+        send_message_to_queue_task(message)
+
     return ss_service.get_by_code(santa_code)

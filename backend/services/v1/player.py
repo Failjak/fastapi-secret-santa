@@ -14,11 +14,11 @@ class PlayerService:
     def __init__(self, session: Session = Depends(get_session)):
         self.session = session
 
-    def create(self, players_data: List[PlayerCreate]) -> List[schemas.Player]:
+    def create(self, santa_code: int, players_data: List[PlayerCreate]) -> List[schemas.Player]:
         """ Creating the Player """
         players = []
         for player_data in players_data:
-            player = schemas.Player(**player_data.dict())
+            player = schemas.Player(**player_data.dict(), santa_code=santa_code)
             players.append(player)
             self.session.add(player)
         self.session.commit()
@@ -37,7 +37,7 @@ class PlayerService:
         )
         return players
 
-    def distribution(self, santa_code: int = None) -> List[schemas.Player]:
+    def distribution(self, santa_code: int) -> List[schemas.Player]:
         """ Distribution of gifts """
 
         players = self.get_list(santa_code, fields=['id', 'gives_to_id'])
@@ -60,3 +60,13 @@ class PlayerService:
 
         self.session.commit()
         return players
+
+    def reset_distribution(self, santa_code: int):
+        """ Resetting gift distribution """
+
+        players = self.get_list(santa_code)
+        for player in players:
+            player.gives_to_id = None
+            self.session.add(player)
+
+        self.session.commit()

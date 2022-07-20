@@ -16,5 +16,9 @@ class Player(Base):
     cards = relationship("Card")
     santa_code = Column(Integer, ForeignKey("secretsanta.code"))
 
-    gives_to_id = Column(Integer, ForeignKey("player.id"), nullable=True)
-    gives_to = relationship("Player", remote_side="Player.id", backref=backref("gives_from"))
+    gives_to_id = Column(Integer, ForeignKey("player.id", ondelete="CASCADE"), nullable=True)
+    gives_to = relationship(
+        "Player",
+        remote_side="Player.id",
+        backref=backref("gives_from")
+    )

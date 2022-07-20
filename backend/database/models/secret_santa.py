@@ -1,11 +1,11 @@
 from datetime import datetime
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel
 from pydantic.fields import Optional, List
 
 from database.models.base_model import ORMBaseModel
 from database.models.player import Player
-from database.schemas.secret_santa import CurrencyType
+from database.schemas.secret_santa import CurrencyType, StatusType
 
 
 class SecretSantaBase(BaseModel):
@@ -30,6 +30,7 @@ class SecretSanta(SecretSantaBase, ORMBaseModel):
     updated_at: datetime = None
     players: List[Player] = []
     currency_iso3: Optional[CurrencyType] = None
+    status: Optional[StatusType]
 
 
 class SecretSantaCreate(SecretSantaBase):

@@ -23,7 +23,7 @@ class Player(BasePlayer, ORMBaseModel):
 
 class PlayerCreate(BasePlayer):
     """ Player model with information to create """
-    santa_code: int = None
+    pass
 
 
 class PlayerMessage(BasePlayer):

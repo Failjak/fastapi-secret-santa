@@ -1,3 +1,3 @@
 from .card import Card, CardType
 from .player import Player
-from .secret_santa import SecretSanta
+from .secret_santa import SecretSanta, StatusType

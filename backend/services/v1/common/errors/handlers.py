@@ -11,7 +11,7 @@ from services.v1.common.errors.types import ErrorType
 
 
 def get_error_message(error: Exception):
-    error_message = None
+    error_message = error
 
     if isinstance(error, PredefinedError):
         error_message = ErrorMessage(
@@ -38,6 +38,8 @@ def get_error_message(error: Exception):
             },
             cause=current_error.get('ctx'),
         )
+
+    # TODO handling others errors
 
     return error_message
 

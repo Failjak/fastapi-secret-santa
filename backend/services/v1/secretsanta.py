@@ -1,6 +1,7 @@
 from typing import List
 
 from fastapi import Depends
+from sqlalchemy.exc import IntegrityError
 
 from database import schemas
 from database.models import SecretSantaCreate
@@ -38,18 +39,41 @@ class SecretSantaService:
     def create(self, santa_data: SecretSantaCreate) -> schemas.SecretSanta:
         """ Creating the SecretSanta game """
         santa_dict = santa_data.dict()
-        santa_code = generate_random_number(
-            self.MIN_SANTA_CODE_NUMBER, self.MAX_SANTA_CODE_NUMBER)
-        santa_dict['code'] = santa_code
-        # TODO add try construct to handle non-unique code value
 
-        santa = schemas.SecretSanta(**santa_dict)
-        santa.status = StatusType.CREATED
-
-        self.session.add(santa)
-        self.session.commit()
+        while True:
+            santa_code = self.__generate_santa_code()
+            santa, uniq = self.__create_new_santa(santa_dict=santa_dict, santa_code=santa_code)
+            if uniq:
+                break
 
         return santa
+
+    def __create_new_santa(self, santa_dict: dict, santa_code: int) -> (schemas.SecretSanta, bool):
+        """
+        Creating new santa instance in DataBase
+
+        return: (santa instance, True/False)
+            True - santa code is unique
+            False - need to recalculate the santa code
+        """
+        santa_dict['code'] = santa_code
+        santa = schemas.SecretSanta(**santa_dict)
+
+        santa.status = StatusType.CREATED
+        self.session.add(santa)
+
+        try:
+            self.session.commit()
+        except IntegrityError:
+            self.session.rollback()
+            return santa, False
+
+        return santa, True
+
+    def __generate_santa_code(self) -> int:
+        """ Generating SecretSanta game code """
+        return generate_random_number(
+            self.MIN_SANTA_CODE_NUMBER, self.MAX_SANTA_CODE_NUMBER)
 
     def update_status(self, santa_code: int, status: StatusType):
         """ Updating santa status """

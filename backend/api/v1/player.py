@@ -4,10 +4,11 @@ from fastapi import APIRouter, Depends
 
 from database.models import Player, PlayerCreate
 from database.schemas import StatusType
+from services.v1.common.routes import ValidationErrorLoggingRoute
 from services.v1.player import PlayerService
 from services.v1.secretsanta import SecretSantaService
 
-router = APIRouter(prefix='/player')
+router = APIRouter(prefix='/player', route_class=ValidationErrorLoggingRoute)
 
 
 @router.post('/players', response_model=List[Player])

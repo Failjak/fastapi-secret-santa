@@ -6,10 +6,11 @@ from database.models import SecretSanta, SecretSantaCreate
 from database.schemas import StatusType
 from services.mappers.player import forming_players_message
 from services.tasks import send_message_to_queue_task
-from services.v1.secretsanta import SecretSantaService
+from services.v1.common.routes import ValidationErrorLoggingRoute
 from services.v1.player import PlayerService
+from services.v1.secretsanta import SecretSantaService
 
-router = APIRouter(prefix='/secretsanta')
+router = APIRouter(prefix='/secretsanta', route_class=ValidationErrorLoggingRoute)
 
 
 @router.get("/list", response_model=List[SecretSanta])

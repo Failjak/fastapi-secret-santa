@@ -4,8 +4,9 @@ from fastapi import APIRouter, Depends
 
 from database.models import Card, CardCreate
 from services.v1.card import CardService
+from services.v1.common.routes import ValidationErrorLoggingRoute
 
-router = APIRouter(prefix='/card')
+router = APIRouter(prefix='/card', route_class=ValidationErrorLoggingRoute)
 
 
 @router.post('/', response_model=Card)

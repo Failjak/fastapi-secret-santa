@@ -1,12 +1,13 @@
 import random
 from typing import List
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends
 from sqlalchemy.orm import load_only
 
 from database import schemas
 from database.models import PlayerCreate
 from database.session import Session, get_session
+from services.v1.errors import PlayerError
 
 
 class PlayerService:
@@ -42,7 +43,7 @@ class PlayerService:
 
         players = self.get_list(santa_code, fields=['id', 'gives_to_id'])
         if len(players) <= 2:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Count of users need be more than 2")
+            raise PlayerError.INVALID_PLAYER_COUNT
 
         players_ids = [player.id for player in players]
         used_ids = []

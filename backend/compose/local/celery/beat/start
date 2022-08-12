@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+
+rm -f './celerybeat.pid'
+celery -A services.tasks.tasks.app beat -l info

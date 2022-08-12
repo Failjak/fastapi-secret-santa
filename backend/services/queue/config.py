@@ -1,14 +1,17 @@
-from dotenv import dotenv_values
-
-values = dotenv_values()
+from pydantic import BaseSettings, Field
 
 
-class Config:
-    USERNAME: str = values.get('RABBITMQ_DEFAULT_USER', 'rabbit')
-    PASSWORD: str = values.get('RABBITMQ_DEFAULT_PASS', 'rabbit')
-    PORT: int = values.get('RABBITMQ_PORT', 5672)
-    HOST: str = values.get('RABBITMQ_HOST', 'rabbitmq')
-    QUEUE_NAME: str = values.get('RABBITMQ_QUEUE_NAME', 'users')
+class QueueSettings(BaseSettings):
+
+    username: str = Field(..., env='RABBITMQ_DEFAULT_USER')
+    password: str = Field(..., env='RABBITMQ_DEFAULT_PASS')
+    port: int
+    host: str
+    queue_name: str
+
+    class Config:
+        env_prefix = 'RABBITMQ_'
+        env_file = '.env'
 
 
-config = Config()
+config = QueueSettings()

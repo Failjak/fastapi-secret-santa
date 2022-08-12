@@ -7,12 +7,12 @@ services:
     container_name: ssb-rabbitmq
     env_file:
       - .env
-    restart: always
+#    restart: always
     ports:
       # AMQP protocol port
-      - "5672:5672"
+      - "5671:5672"
       # HTTP management UI
-      - "15672:15672"
+      - "15671:15672"
 
   db:
     image: postgres:14.1-alpine
@@ -36,7 +36,10 @@ services:
       - "6378"
 
   backend:
-    build: ./
+    build:
+      context: ./
+      dockerfile: ./compose/local/Dockerfile
+    command: /start
     container_name: ssb-backend
     volumes:
       - .:/src/app/
@@ -51,11 +54,13 @@ services:
       - rabbitmq
 
   celery:
-    build: ./
+    build:
+      context: ./
+      dockerfile: ./compose/local/Dockerfile
     container_name: ssb-celery
-    command: celery worker -A backend --loglevel=info
+    command: /start-celeryworker
     volumes:
-      - ./celery_data:/var/lib/celery/data
+      - .:/src/app/
     environment:
       - CELERY_BROKER_URL=redis://redis:6378/0
       - CELERY_RESULT_BACKEND=redis://redis:6378/0
@@ -63,8 +68,39 @@ services:
       - redis
       - backend
 
+  celery-beat:
+    build:
+      context: ./
+      dockerfile: ./compose/local/Dockerfile
+    container_name: ssb-celery-beat
+    command: /start-celerybeat
+    volumes:
+      - .:/src/app
+#    env_file:
+#      - .env
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6378/0
+      - CELERY_RESULT_BACKEND=redis://redis:6378/0
+    depends_on:
+      - redis
+      - backend
+      - rabbitmq
+
+  flower:
+    build:
+      context: ./
+      dockerfile: ./compose/local/Dockerfile
+    container_name: ssb-flower
+    image: mher/flower
+    command: /start-flower
+    env_file: .env
+    volumes:
+      - .:/src/app
+    expose:
+      - 5555
+    ports:
+      - "5555:5555"
+
 volumes:
-  celery_data:
   postgres_data:
-  db:
-    driver: local
+  rabbitmq_data:

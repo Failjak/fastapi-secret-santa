@@ -1,22 +1,28 @@
+import json
 from typing import Union
 
 import pika
 from pika import PlainCredentials
-import json
-
-from services.queue.config import Config
+from pydantic import BaseSettings
 
 
-class QueueProviderService:
+class QueueService:
     """ Communication with RabbitMQ service """
 
-    def __init__(self, config: Config):
+    def __init__(self, config: BaseSettings):
         self.config = config
-        self.queue_name = self.config.QUEUE_NAME
+        self.queue_name = self.config.queue_name
 
         self._connection = self._get_connection()
         self._channel = self._connection.channel()
         self._channel.queue_declare(self.queue_name)
+
+    def get_message(self):
+        """ Getting message from RabbitMQ queue """
+        message = []
+        if resp := self._channel.basic_get(queue=self.queue_name):
+            message = self.callback(*resp)
+        return message
 
     def add_message(self, message, exchange=''):
         """ Adding message to queue in RabbitMQ """
@@ -36,11 +42,11 @@ class QueueProviderService:
         """ Getting connection to RabbitMQ """
 
         return pika.BlockingConnection(pika.ConnectionParameters(
-            host=self.config.HOST,
-            port=self.config.PORT,
+            host=self.config.host,
+            port=self.config.port,
             credentials=PlainCredentials(
-                username=self.config.USERNAME,
-                password=self.config.PASSWORD
+                username=self.config.username,
+                password=self.config.password
             )
         ))
 

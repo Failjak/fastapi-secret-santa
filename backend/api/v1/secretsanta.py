@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from database.models import SecretSanta, SecretSantaCreate
 from database.schemas import StatusType
 from services.mappers.player import forming_players_message
-from services.tasks import send_message_to_queue_task
+from services.tasks.tasks import send_message_to_queue_task
 from services.v1.common.routes import ValidationErrorLoggingRoute
 from services.v1.player import PlayerService
 from services.v1.secretsanta import SecretSantaService
@@ -47,10 +47,6 @@ def submit_game(
     """
 
     santa = ss_service.get_by_code(santa_code)
-    # TODO if ready - allow to submit
-    # TODO if players -  need to reset
-    # TODO if create - just distribution
-    # TODO if submitted - skip
 
     if santa.status == StatusType.CREATED:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Need to add players")
